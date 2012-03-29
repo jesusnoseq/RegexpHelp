@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RegExpHelp</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta charset="utf-8">
+        <style media="screen">
+            * { margin: 0; padding: 0; }
+            html, body { height: 100%; width: 100%; }
+            body {
+                background: #ffffff;
+                width: 980px;
+                margin: 0 auto;
+                background: url(img/trybg.png);
+            }
+            h1{
+                font-size: 4em;
+                width: 350px;
+                margin: 50px auto;
+            }
+            dl{
+                display: block;
+            }
+            dt:after{
+                content: ': '
+            }
+            dt{
+                
+            }
+            dd{
+                margin: 0 0 10px 20px;
+            }
+            #patternForm{
+                margin-bottom: 50px;
+            }
+            #patternIn{
+                width: 500px;
+                height: 50px;
+                font-size: 2em;
+                border: 1px solid #d4d4d4;
+            }
+            #doTest{
+                height: 50px;
+                width: 502px;
+            }
+            #patternDev{
+                background: #fff;
+                display: block;
+                float: left;
+                width: 530px;
+                margin: 0 20px 0 0;
+                padding: 20px;
+                border: 1px solid #000;
+            }
+            
+            #testManager{
+                background: #fff;
+                display: block;
+                float: left;
+                width: 380px;
+                border: 1px solid #000;
+            }
+            #testAdd{
+              height: 40px;  
+              padding: 15px 10px 10px 10px;
+              text-align: center;
+            }
+            #testAdd input{
+                width: 300px;
+                height: 25px;
+                font-size: 1.1em;
+            }
+            #testAdd a{
+                border: 1px solid #d4d4d4;
+                display: block;
+                float: right;
+                height: 25px;
+                width:35px;
+            }
+            .test{
+                height: 30px;
+                padding: 10px;
+                width: 355px;
+                margin: 5px auto;
+                border: 1px solid #d4d4d4;
+            }
+            .test .close{
+                float:right;
+                position: relative;
+                top: -10px;
+                right: -10px;
+                height: 20px;
+                line-height: 10px;
+                width: 20px;
+            }
+            .true{
+                background: #9e9;
+            }
+            .false{
+                background: #e99;
+            }
+            
+        </style>
+        <script type="text/javascript" src="jquery.js"></script>
+        <script type="text/javascript">
+            $(document).ready(function() {
+                $('#doTest').click(function(){
+                    var pattern=getPattern();
+                    $('.test').each(function (index,data){
+                       limpia(data);
+                       if( test($(data).text()) ){
+                           $(data).addClass('true');
+                       }
+                       else{
+                           $(data).addClass('false');
+                       }
+                    });
+                    
+                    
+                    
+                });
+                $('#addTest').click(function(){
+                    var value=$('#testIn').val();
+                    var test='<div class="test"><input type="button" class="close" value="x" onclick="eraseTest(this);"/>'+value+'</div>';
+                    
+                    $('#tests').append(test);
+                });
+ 
+                
+                function limpia(data){
+                    $(data).removeClass('true');
+                    $(data).removeClass('false');
+                }
+            
+                function getPattern(){
+                    return $('#patternIn').val();
+                }
+        
+            
+                function test(value){
+                    var regExp = new RegExp(getPattern(),"");
+
+                    return ( regExp.test(value) );
+                }
+            });
+            
+            //how work liveHandler(event)?
+            function eraseTest(elem){
+                $(elem).parent().remove();
+            }
+
+        </script>
+
+    </head>
+    <body>
+        <h1>RegExpHelp</h1>
+        <div id="patternDev">
+            <form id="patternForm">
+                <input type="text" name="patternIn" id="patternIn" value="^$"/>
+                <input type="button" name="doTest" id="doTest" value="doTest"/>
+            </form>
+            <div id="doc">
+                <div id="examples">
+                    <dl>
+                        <dt> my url:)</dt><dd>^http://([0-9A-z]+(\.)[0-9A-z]+){1,}(/([0-9A-z]+)?){0,}$</dd>
+                        <dt>Phone number with 902 prefix</dt><dd>^902[0-9]{6}$</dd>
+                        <dt>Date</dt><dd>^([0-9]{1,2})/([0-9]{1,2}/([0-9]{4}))$</dd>
+                        <dt>DNI</dt><dd>/^\d{8}[A-Z]$/</dd>
+                        <dt>number</dt><dd>/[^0-9]/</dd>
+                        <dt>http url</dt><dd>https?://(.+\.)+.{2,4}(/.*)?</dd>
+                        <dt>mail</dt><dd>/^([a-z0-9\+_\-]+)(\.[a-z0-9\+_\-]+)*@([a-z0-9\-]+\.)+[a-z]{2,6}$/ix</dd>
+                        <dt>alpha</dt> <dd>/^([a-z])+$/i</dd>
+                        <dt>alphanumeric</dt><dd>/^([a-z0-9])+$/i</dd>
+                        <dt>alphanumeric with dash</dt><dd>/^([-a-z0-9_-])+$/i</dd>
+                        <dt>numeric</dt><dd>/^[\-+]?[0-9]*\.?[0-9]+$/</dd>
+                        <dt>integer</dt><dd>/^[\-+]?[0-9]+$/</dd>
+                        <dt>natural</dt><dd>/^[0-9]+$/ </dd>
+                        <dt>base 64</dt><dd>/[^a-zA-Z0-9\/\+=]/</dd>
+                        <dt>Valid hexadecimal colour code</dt><dd>(#?([A-Fa-f0-9]){3}(([A-Fa-f0-9]){3})?)</dd>
+                        <dt>jpg, gif or png image</dt><dd>([^\s]+(?=\.(jpg|gif|png))\.\2)</dd>
+                        <!--<dt>HTML Tags</dt><<dd>(\<(/?[^\>]+)\>)</dd>-->
+                    </dl>
+                </div>
+                <h3> <span> Special characters in regular expressions (NetBeans7 doc)</span></h3>
+<table border="1" style="background:#FFFFFF none repeat scroll 0%;border: 1px solid #666666;margin-bottom:10px;margin-top:10px" width="100%">
+                    <tr>
+                        <td colspan="1" rowspan="1" style="background:#DDDDDD none repeat scroll 0%; border:1px solid #BBBBBB;">Character</td>
+                        <td colspan="1" rowspan="1" style="background:#DDDDDD none repeat scroll 0%; border:1px solid #BBBBBB;">Meaning</td>
+                        </tr>
+                    <tr>
+                        <td colspan="1" rowspan="1"><code>\</code></td>
+                        <td colspan="1" rowspan="1">
+                            <p>For characters that are usually treated literally, indicates that the next character is special and not to be interpreted literally.
+                                </p><p>For example, <code>/b/</code> matches the character 'b'. By placing a backslash in front of b, that is by using <code>/\b/</code>, the character becomes special to mean match a word boundary.
+                                </p><p>-or-
+                                </p><p>For characters that are usually treated specially, indicates that the next character is not special and should be interpreted literally.
+                                </p><p>For example, * is a special character that means 0 or more occurrences of the preceding character should be matched; for example, <code>/a* /</code> means match 0 or more a's. To match <code>*</code> literally, precede the it with a backslash; for example, <code>/a\* /</code> matches 'a*'.
+                                </p>
+                            </td>
+                        </tr>
+                    <tr>
+                        <td colspan="1" rowspan="1"><code>^</code></td>
+                        <td colspan="1" rowspan="1">
+                            <p>Matches beginning of input. If the multiline flag is set to true, also matches immediately after a line break character.
+                                </p><p>For example, <code>/^A/</code> does not match the 'A' in "an A", but does match the first 'A' in "An A."
+                                </p>
+                            </td>
+                        </tr>
+                    <tr>
+                        <td colspan="1" rowspan="1"><code>$</code></td>
+                        <td colspan="1" rowspan="1">
+                            <p>Matches end of input. If the multiline flag is set to true, also matches immediately before a line break character.
+                                </p><p>For example, <code>/t$/</code> does not match the 't' in "eater", but does match it in "eat".
+                                </p>
+                            </td>
+                        </tr>
+                    <tr>
+                        <td colspan="1" rowspan="1"><code>*</code></td>
+                        <td colspan="1" rowspan="1">
+                            <p>Matches the preceding item 0 or more times.
+                                </p><p>For example, <code>/bo* /</code> matches 'boooo' in "A ghost booooed" and 'b' in "A bird warbled", but nothing in "A goat grunted".
+                                </p>
+                            </td>
+                        </tr>
+                    <tr>
+                        <td colspan="1" rowspan="1"><code>+</code></td>
+                        <td colspan="1" rowspan="1">
+                            <p>Matches the preceding item 1 or more times. Equivalent to <code>{1,}</code>.
+                                </p><p>For example, <code>/a+/</code> matches the 'a' in "candy" and all the a's in "caaaaaaandy".
+                                </p>
+                            </td>
+                        </tr>
+                    <tr>
+                        <td colspan="1" rowspan="1"><code>?</code></td>
+                        <td colspan="1" rowspan="1">
+                            <p>Matches the preceding item 0 or 1 time.
+                                </p><p>For example, <code>/e?le?/</code> matches the 'el' in "angel" and the 'le' in "angle."
+                                </p><p>If used immediately after any of the quantifiers <code>*</code>, <code>+</code>, <code>?</code>, or <code>{}</code>, makes the quantifier non-greedy (matching the minimum number of times), as opposed to the default, which is greedy (matching the maximum number of times).
+                                </p><p>Also used in lookahead assertions, described under <code>(?=)</code>, <code>(?!)</code>, and <code>(?:)</code> in this table.
+                                </p>
+                            </td>
+                        </tr>
+                    <tr>
+                        <td colspan="1" rowspan="1"><code>.</code></td>
+                        <td colspan="1" rowspan="1">
+                            <p>(The decimal point) matches any single character except the newline characters: \n \r \u2028 or \u2029. (<code>[\s\S]</code> can be used to match any character including newlines.)
+                                </p><p>For example, <code>/.n/</code> matches 'an' and 'on' in "nay, an apple is on the tree", but not 'nay'.
+                                </p>
+                            </td>
+                        </tr>
+                    <tr>
+                        <td colspan="1" rowspan="1"><code>(<i>x</i>)</code></td>
+                        <td colspan="1" rowspan="1">
+                            <p>Matches <code><i>x</i></code> and remembers the match. These are called capturing parentheses.
+                                </p><p>For example, <code>/(foo)/</code> matches and remembers 'foo' in "foo bar." The matched substring can be recalled from the resulting array's elements <code>[1], ..., [<i>n</i>]</code> or from the predefined <code>RegExp</code> object's properties <code>$1, ..., $9</code>.
+                                </p>
+                            </td>
+                        </tr>
+                    <tr>
+                        <td colspan="1" rowspan="1"><code>(?:<i>x</i>)</code></td>
+                        <td colspan="1" rowspan="1">
+                            <p>Matches <code><i>x</i></code> but does not remember the match. These are called non-capturing parentheses. The matched substring can not be recalled from the resulting array's elements <code>[1], ..., [<i>n</i>]</code> or from the predefined <code>RegExp</code> object's properties <code>$1, ..., $9</code>.
+                                </p>
+                            </td>
+                        </tr>
+                    <tr>
+                        <td colspan="1" rowspan="1"><code><i>x</i>(?=<i>y</i>)</code></td>
+                        <td colspan="1" rowspan="1">
+                            <p>Matches <code><i>x</i></code> only if <code><i>x</i></code> is followed by <code><i>y</i></code>. For example, <code>/Jack(?=Sprat)/</code> matches 'Jack' only if it is followed by 'Sprat'. <code>/Jack(?=Sprat|Frost)/</code> matches 'Jack' only if it is followed by 'Sprat' or 'Frost'. However, neither 'Sprat' nor 'Frost' is part of the match results.
+                                </p>
+                            </td>
+                        </tr> 
+                    <tr>
+                        <td colspan="1" rowspan="1"><code><i>x</i>(?!<i>y</i>)</code></td>
+                        <td colspan="1" rowspan="1">
+                            <p>Matches <code><i>x</i></code> only if <code><i>x</i></code> is not followed by <code><i>y</i></code>. For example, <code>/\d+(?!\.)/</code> matches a number only if it is not followed by a decimal point.
+                                </p><p><code>/\d+(?!\.)/.exec("3.141")</code> matches 141 but not 3.141.
+                                </p>
+                            </td>
+                        </tr>
+                    <tr>
+                        <td colspan="1" rowspan="1"><code><i>x</i>|<i>y</i></code></td>
+                        <td colspan="1" rowspan="1">
+                            <p>Matches either <code><i>x</i></code> or <code><i>y</i></code>.
+                                </p><p>For example, <code>/green|red/</code> matches 'green' in "green apple" and 'red' in "red apple."
+                                </p>
+                            </td>
+                        </tr>
+                    <tr>
+                        <td colspan="1" rowspan="1"><code>{<i>n</i>}</code></td>
+                        <td colspan="1" rowspan="1">
+                            <p>Where <code><i>n</i></code> is a positive integer. Matches exactly <code><i>n</i></code> occurrences of the preceding item.
+                                </p><p>For example, <code>/a{2}/</code> doesn't match the 'a' in "candy," but it matches all of the a's in "caandy," and the first two a's in "caaandy."
+                                </p>
+                            </td>
+                        </tr>
+                    <tr>
+                        <td colspan="1" rowspan="1"><code>{<i>n</i>,}</code></td>
+                        <td colspan="1" rowspan="1">
+                            <p>Where <code><i>n</i></code> is a positive integer. Matches at least <code><i>n</i></code> occurrences of the preceding item.
+                                </p><p>For example, <code>/a{2,}</code> doesn't match the 'a' in "candy", but matches all of the a's in "caandy" and in "caaaaaaandy."
+                                </p>
+                            </td>
+                        </tr>
+                    <tr>
+                        <td colspan="1" rowspan="1"><code>{<i>n</i>,<i>m</i>}</code></td>
+                        <td colspan="1" rowspan="1">
+                            <p>Where <code><i>n</i></code> and <code><i>m</i></code> are positive integers. Matches at least <code><i>n</i></code> and at most <code><i>m</i></code> occurrences of the preceding item.
+                                </p><p>For example, <code>/a{1,3}/</code> matches nothing in "cndy", the 'a' in "candy," the first two a's in "caandy," and the first three a's in "caaaaaaandy". Notice that when matching "caaaaaaandy", the match is "aaa", even though the original string had more a's in it.
+                                </p>
+                            </td>
+                        </tr>
+                    <tr>
+                        <td colspan="1" rowspan="1"><code>[<i>xyz</i>]</code></td>
+                        <td colspan="1" rowspan="1">
+                            <p>A character set. Matches any one of the enclosed characters. You can specify a range of characters by using a hyphen.
+                                </p><p>For example, <code>[abcd]</code> is the same as <code>[a-d]</code>. They match the 'b' in "brisket" and the 'c' in "ache".
+                                </p>
+                            </td>
+                        </tr>
+                    <tr>
+                        <td colspan="1" rowspan="1"><code>[^<i>xyz</i>]</code></td>
+                        <td colspan="1" rowspan="1">
+                            <p>A negated or complemented character set. That is, it matches anything that is not enclosed in the brackets. You can specify a range of characters by using a hyphen.
+                                </p><p>For example, <code>[^abc]</code> is the same as <code>[^a-c]</code>. They initially match 'r' in "brisket" and 'h' in "chop."
+                                </p>
+                            </td>
+                        </tr>
+                    <tr>
+                        <td colspan="1" rowspan="1"><code>[\b]</code></td>
+                        <td colspan="1" rowspan="1">
+                            <p>Matches a backspace. (Not to be confused with <code>\b</code>.)
+                                </p>
+                            </td>
+                        </tr>
+                    <tr>
+                        <td colspan="1" rowspan="1"><code>\b</code></td>
+                        <td colspan="1" rowspan="1">
+                            <p>Matches a word boundary, such as a space. (Not to be confused with <code>[\b]</code>.)
+                                </p><p>For example, <code>/\bn\w/</code> matches the 'no' in "noonday"; <code>/\wy\b/</code> matches the 'ly' in "possibly yesterday."
+                                </p>
+                            </td>
+                        </tr>
+                    <tr>
+                        <td colspan="1" rowspan="1"><code>\B</code></td>
+                        <td colspan="1" rowspan="1">
+                            <p>Matches a non-word boundary.
+                                </p><p>For example, <code>/\w\Bn/</code> matches 'on' in "noonday", and <code>/y\B\w/</code> matches 'ye' in "possibly yesterday."
+                                </p>
+                            </td>
+                        </tr>
+                    <tr>
+                        <td colspan="1" rowspan="1"><code>\c<i>X</i></code></td>
+                        <td colspan="1" rowspan="1">
+                            <p>Where <code><i>X</i></code> is a letter from A - Z. Matches a control character in a string.
+                                </p><p>For example, <code>/\cM/</code> matches control-M in a string.
+                                </p>
+                            </td>
+                        </tr>
+                    <tr>
+                        <td colspan="1" rowspan="1"><code>\d</code></td>
+                        <td colspan="1" rowspan="1">
+                            <p>Matches a digit character(Basic Latin alphabet). Equivalent to <code>[0-9]</code>.
+                                </p><p><b>Note</b>: In Firefox 2 and earlier, matches a digit character from any alphabet.(<a href="https://bugzilla.mozilla.org/show_bug.cgi?id=378738" rel="nofollow" shape="rect" title="https://bugzilla.mozilla.org/show_bug.cgi?id=378738">bug 378738</a>)
+                                </p><p>For example, <code>/\d/</code> or <code>/[0-9]/</code> matches '2' in "B2 is the suite number."
+                                </p>
+                            </td>
+                        </tr>
+                    <tr>
+                        <td colspan="1" rowspan="1"><code>\D</code></td>
+                        <td colspan="1" rowspan="1">
+                            <p>Matches any non-digit character(Basic Latin alphabet). Equivalent to <code>[^0-9]</code>.
+                                </p><p><b>Note</b>: In Firefox 2 and earlier, all  alphabet. (<a href="https://bugzilla.mozilla.org/show_bug.cgi?id=378738" rel="nofollow" shape="rect" title="https://bugzilla.mozilla.org/show_bug.cgi?id=378738">bug 378738</a>)
+                                </p><p>For example, <code>/\D/</code> or <code>/[^0-9]/</code> matches 'B' in "B2 is the suite number."
+                                </p>
+                            </td>
+                        </tr>
+                    <tr>
+                        <td colspan="1" rowspan="1"><code>\f</code></td>
+                        <td colspan="1" rowspan="1">
+                            <p>Matches a form-feed.
+                                </p>
+                            </td>
+                        </tr>
+                    <tr>
+                        <td colspan="1" rowspan="1"><code>\n</code></td>
+                        <td colspan="1" rowspan="1">
+                            <p>Matches a linefeed.
+                                </p>
+                            </td>
+                        </tr>
+                    <tr>
+                        <td colspan="1" rowspan="1"><code>\r</code></td>
+                        <td colspan="1" rowspan="1">
+                            <p>Matches a carriage return.
+                                </p>
+                            </td>
+                        </tr>
+                    <tr>
+                        <td colspan="1" rowspan="1"><code>\s</code></td>
+                        <td colspan="1" rowspan="1">
+                            <p>Matches a single white space character, including space, tab, form feed, line feed and other unicode spaces.<small><sup id="ref_equivalent_s"><a href="RegExp#endnote_equivalent_s" rel="nofollow" shape="rect" title="http://developer.mozilla.org/en/docs/Core_JavaScript_1.5_Reference:Global_Objects:RegExp#endnote_equivalent_s">[1]</a></sup></small>
+                                </p><p>For example, <code>/\s\w* /</code> matches ' bar' in "foo bar."
+                                </p>
+                            </td>
+                        </tr>
+                    <tr>
+                        <td colspan="1" rowspan="1"><code>\S</code></td>
+                        <td colspan="1" rowspan="1">
+                            <p>Matches a single character other than white space.<small><sup id="ref_equivalent_S"><a href="RegExp#endnote_equivalent_S" rel="nofollow" shape="rect" title="http://developer.mozilla.org/en/docs/Core_JavaScript_1.5_Reference:Global_Objects:RegExp#endnote_equivalent_S">[2]</a></sup></small>
+                                </p><p>For example, <code>/\S\w* /</code> matches 'foo' in "foo bar."
+                                </p>
+                            </td>
+                        </tr>
+                    <tr>
+                        <td colspan="1" rowspan="1"><code>\t</code></td>
+                        <td colspan="1" rowspan="1">
+                            <p>Matches a tab.
+                                </p>
+                            </td>
+                        </tr>
+                    <tr>
+                        <td colspan="1" rowspan="1"><code>\v</code></td>
+                        <td colspan="1" rowspan="1">
+                            <p>Matches a vertical tab.
+                                </p>
+                            </td>
+                        </tr>
+                    <tr>
+                        <td colspan="1" rowspan="1"><code>\w</code></td>
+                        <td colspan="1" rowspan="1">
+                            <p>Matches any (Basic Latin alphabet) alphanumeric character including the underscore. Equivalent to <code>[A-Za-z0-9_]</code>.
+                                </p><p>For example, <code>/\w/</code> matches 'a' in "apple," '5' in "$5.28," and '3' in "3D."
+                                </p>
+                            </td>
+                    </tr>
+                    <tr>
+                        <td colspan="1" rowspan="1"><code>\W</code></td>
+                        <td colspan="1" rowspan="1">
+                            <p>Matches any non-(Basic Latin)word character. Equivalent to <code>[^A-Za-z0-9_]</code>.
+                                </p><p>For example, <code>/\W/</code> or <code>/[^$A-Za-z0-9_]/</code> matches '%' in "50%."
+                                </p>
+                            </td>
+                        </tr>
+                    <tr>
+                        <td colspan="1" rowspan="1"><code>\<i>n</i></code></td>
+                        <td colspan="1" rowspan="1">
+                            <p>Where <code><i>n</i></code> is a positive integer. A back reference to the last substring matching the n parenthetical in the regular expression (counting left parentheses).
+                                </p><p>For example, <code>/apple(,)\sorange\1/</code> matches 'apple, orange,' in "apple, orange, cherry, peach." A more complete example follows this table.
+                                </p>
+                            </td>
+                        </tr>
+                    <tr>
+                        <td colspan="1" rowspan="1"><code>\0</code></td>
+                        <td colspan="1" rowspan="1">
+                            <p>Matches a NUL character. Do not follow this with another digit.
+                                </p>
+                            </td>
+                        </tr>
+                    <tr>
+                        <td colspan="1" rowspan="1"><code>\x<i>hh</i></code></td>
+                        <td colspan="1" rowspan="1">
+                            <p>Matches the character with the code <code><i>hh</i></code> (two hexadecimal digits)
+                                </p>
+                            </td>
+                        </tr>
+                    <tr>
+                        <td colspan="1" rowspan="1"><code>\u<i>hhhh</i></code></td>
+                        <td colspan="1" rowspan="1">
+                            <p>Matches the character with code <code><i>hhhh</i></code> (four hexadecimal digits).
+                                </p>
+                            </td>
+                        </tr>
+                    </table>
+            </div>
+        </div>
+        <div id="testManager">
+            <div id="testAdd">
+                <input type="text" name="testIn" id="testIn"/>
+                <a href="#" id="addTest">Add</a>
+            </div>
+            <div id="tests">
+                
+            </div>
+        </div>
+    </body>
+</html>
